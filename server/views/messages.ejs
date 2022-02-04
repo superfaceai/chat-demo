@@ -1,0 +1,47 @@
+<nav>
+  Select provider:
+  <a href="?provider=slack">Slack</a> |
+  <a href="?provider=discord">Discord</a>
+</nav>
+
+<main>
+  <h3>Messages from <%= provider %>:</h3>
+
+  <% if (destinations !== undefined) { %>
+    <nav>
+      Select destination: 
+      <% for(const dest of destinations) { %>
+        <a href="?provider<%= provider %>&destination=<%= dest.id %>">
+          <%= dest.name || dest.id %>
+        </a>
+      <% } %>
+    </nav>
+  <% } %>
+
+  <% if (success === true) { %>
+
+    <% if (result !== undefined) { %>  
+      <% if (result.messages.previousPage !== undefined) { %>
+        <p>
+          <a href="?provider=<%= provider %>&destination=<%= destination %>&page=<%= previousPage %>">Previous page</a>
+        </p>
+      <% }%>
+
+      <ul>
+        <% for(const message of result.messages) { %>
+          <li><%= message.text %></li>
+        <% } %>
+      </ul>
+
+      <% if (result.messages.nextPage !== undefined) { %>
+        <p>
+          <a href="?provider=<%= provider %>&destination=<%= destination %>&page=<%= nextPage %>">Next page</a>
+        </p>
+      <% }%>  
+    <% } %>
+
+  <% } else if (success === false){ %>
+    <p>Getting messages failed: <%= error.title%>, <%= error.detail%></p>
+  <% } %>
+
+</main>

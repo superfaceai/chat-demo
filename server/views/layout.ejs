@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Messaging demo | Superface</title>
+  </head>
+  <body>
+    <% if (!user) { %>
+    <p>
+      <a href="/">Home</a> |
+      <a href="/login">Log In</a>
+    </p>
+    <% } else { %>
+    <p>
+      <a href="/">Home</a> | 
+      <a href="/messages">Messages</a> |
+      <a href="/members">Members</a> |
+      <a href="/logout">Log Out</a>
+    </p>
+    <% } %> <%- body %>
+  </body>
+</html>
