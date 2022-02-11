@@ -1,24 +1,43 @@
 {
     "profiles": {
-      "chat/get-destinations": {
-        "file": "./grid/chat/get-destinations/profile.supr",
+      "chat/channels": {
+        "file": "./grid/chat/channels/profile.supr",
         "providers": {
           "slack": {
-            "file": "./grid/chat/get-destinations/maps/slack.suma"
+            "file": "./grid/chat/channels/maps/slack.suma"
           },
           "discord": {
-            "file": "./grid/chat/get-destinations/maps/discord.suma"
+            "file": "./grid/chat/channels/maps/discord.suma"
           }
         }
       },
-      "chat/get-messages": {
-        "file": "./grid/chat/get-messages/profile.supr",
+      "chat/messages": {
+        "file": "./grid/chat/messages/profile.supr",
         "providers": {
           "slack": {
-            "file": "./grid/chat/get-messages/maps/slack.suma"
+            "file": "./grid/chat/messages/maps/slack.suma"
           },
           "discord": {
-            "file": "./grid/chat/get-messages/maps/discord.suma"
+            "file": "./grid/chat/messages/maps/discord.suma"
+          }
+        }
+      },
+      "chat/threads": {
+        "file": "./grid/chat/threads/profile.supr",
+        "providers": {
+          "discord": {
+            "file": "./grid/chat/threads/maps/discord.suma"
+          }
+        }
+      },
+      "chat/members": {
+        "file": "./grid/chat/members/profile.supr",
+        "providers": {
+          "slack": {
+            "file": "./grid/chat/members/maps/slack.suma"
+          },
+          "discord": {
+            "file": "./grid/chat/members/maps/discord.suma"
           }
         }
       },
@@ -33,14 +52,14 @@
           }
         }
       },
-      "chat/get-servers": {
-        "file": "./grid/chat/get-servers/profile.supr",
+      "chat/servers": {
+        "file": "./grid/chat/servers/profile.supr",
         "providers": {
           "slack": {
-            "file": "./grid/chat/get-servers/maps/slack.suma"
+            "file": "./grid/chat/servers/maps/slack.suma"
           },
           "discord": {
-            "file": "./grid/chat/get-servers/maps/discord.suma"
+            "file": "./grid/chat/servers/maps/discord.suma"
           }
         }
       }
