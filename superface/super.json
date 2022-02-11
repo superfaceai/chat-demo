@@ -55,9 +55,6 @@
       "chat/servers": {
         "file": "./grid/chat/servers/profile.supr",
         "providers": {
-          "slack": {
-            "file": "./grid/chat/servers/maps/slack.suma"
-          },
           "discord": {
             "file": "./grid/chat/servers/maps/discord.suma"
           }
