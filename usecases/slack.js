@@ -1,15 +1,20 @@
 const { inspect } = require('util');
-const { getMessages, getDestinations, sendMessage } = require('./sf/usecases');
+const {
+  getChannels,
+  getMembers,
+  getMessages,
+  sendMessage,
+} = require('./sf/usecases');
 
 async function slack() {
   const provider = 'slack';
 
-  const destinations = await getDestinations(provider, {
+  const channels = await getChannels(provider, {
     types: ['public'],
   });
-  // console.log(inspect(destinations, true, 15));
+  // console.log(inspect(channels, true, 15));
 
-  const channelId = destinations.destinations[0].id
+  const channelId = channels.channels[1].id;
   const firstPage = await getMessages(provider, {
     destination: channelId,
     limit: 2,
@@ -37,6 +42,14 @@ async function slack() {
   //   text: 'text message',
   // });
   // console.log(inspect(sentMessage, true, 15));
+
+  // New usecases:
+  // GetMembers - also supports pagination in same manner as described above
+  const members = await getMembers(provider, {
+    limit: 2,
+  });
+
+  console.log(inspect(members, true, 15));
 }
 
 module.exports = slack;
