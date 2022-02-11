@@ -1,7 +1,7 @@
 const client = require('./client');
 
 async function getMessages(providerName, input) {
-  const profile = await client.getProfile('chat/get-messages');
+  const profile = await client.getProfile('chat/messages');
   const provider = await client.getProvider(providerName);
 
   const result = await profile
@@ -11,12 +11,34 @@ async function getMessages(providerName, input) {
   return result.unwrap();
 }
 
-async function getDestinations(providerName, input) {
-  const profile = await client.getProfile('chat/get-destinations');
+async function getChannels(providerName, input) {
+  const profile = await client.getProfile('chat/channels');
   const provider = await client.getProvider(providerName);
 
   const result = await profile
-    .getUseCase('GetDestinations')
+    .getUseCase('GetChannels')
+    .perform(input, { provider });
+
+  return result.unwrap();
+}
+
+async function getMembers(providerName, input) {
+  const profile = await client.getProfile('chat/members');
+  const provider = await client.getProvider(providerName);
+
+  const result = await profile
+    .getUseCase('GetMembers')
+    .perform(input, { provider });
+
+  return result.unwrap();
+}
+
+async function getThreads(providerName, input) {
+  const profile = await client.getProfile('chat/threads');
+  const provider = await client.getProvider(providerName);
+
+  const result = await profile
+    .getUseCase('GetThreads')
     .perform(input, { provider });
 
   return result.unwrap();
@@ -34,7 +56,7 @@ async function sendMessage(providerName, input) {
 }
 
 async function getServers(providerName, input) {
-  const profile = await client.getProfile('chat/get-servers');
+  const profile = await client.getProfile('chat/servers');
   const provider = await client.getProvider(providerName);
 
   const result = await profile
@@ -46,7 +68,9 @@ async function getServers(providerName, input) {
 
 module.exports = {
     getMessages,
-    getDestinations,
+    getChannels,
+    getMembers,
+    getThreads,
     sendMessage,
     getServers,
 };
