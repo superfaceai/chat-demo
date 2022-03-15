@@ -5,7 +5,9 @@ async function perform(useCase, input, provider) {
     return (await useCase.perform(input, { provider })).unwrap();
   } catch (error) {
     throw new Error(
-      `Perform failed: ${provider.configuration.name} - ${useCase.name}\n\nINPUT:\n${JSON.stringify(
+      `Perform failed: ${provider.configuration.name} - ${
+        useCase.name
+      }\n\nINPUT:\n${JSON.stringify(
         input
       )}\n\nOriginal Error: ${error.toString()}`
     );
