@@ -7,32 +7,32 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@superfaceai/ast@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@superfaceai/ast/-/ast-1.0.0.tgz#7f58f244e60efc7cb6ae5d421fec66c9a94aa6bd"
-  integrity sha512-YbJTkisep18UCcTRpeFDRYUqIajbQWv396c7fkfIjAuR9HAOkt3hZqrdrnA3qINjLaFUzviZW0NOQTL1jeiRXw==
+"@superfaceai/ast@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@superfaceai/ast/-/ast-1.1.0.tgz#cb87f9c980e600bd74536e14bafe7231d15c291c"
+  integrity sha512-/Bpm21XWwUElogBB8AdKkjbe4h1vExBx2xTrfE5t74FiFZUxhnLYfVcUCKNqUqsuggF/uUUAZ+5uBtmffJYm6g==
   dependencies:
     typescript-is "^0.18.3"
 
-"@superfaceai/one-sdk@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@superfaceai/one-sdk/-/one-sdk-1.2.1.tgz#b141167b27cb5698304256dcb214e79bb1e2e91f"
-  integrity sha512-GiAeUH+iHn0fCH0fXp8kE/9n5TgguzD18wmc738j5NcOeW1hJMsUONt6SvKRKbRpemYs6nacT6f+1IcxaDNrWg==
+"@superfaceai/one-sdk@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@superfaceai/one-sdk/-/one-sdk-1.3.0.tgz#741ee1454877913b420a11b14b823e6262453809"
+  integrity sha512-XyztSPy33kRpoNuCq97tL1jMdT6BX1jJ2cFaz50fjwCsfX7f+zi5qx0tvpcZM2dDRm+1dS9cRC04lweIQtmRSg==
   dependencies:
-    "@superfaceai/ast" "1.0.0"
-    "@superfaceai/parser" "1.0.0"
+    "@superfaceai/ast" "^1.1.0"
+    "@superfaceai/parser" "^1.1.0"
     abort-controller "^3.0.0"
-    cross-fetch "^3.0.5"
+    cross-fetch "^3.1.5"
     debug "^4.3.2"
     isomorphic-form-data "^2.0.0"
-    vm2 "^3.9.2"
+    vm2 "^3.9.7"
 
-"@superfaceai/parser@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@superfaceai/parser/-/parser-1.0.0.tgz#48e55b40670a9af6e603107709cc89ae538f71d8"
-  integrity sha512-verBpn8bN13fAo1pDCNMGxKLwXC26dlR7iDIM2ekioN/K+kOtXjq6A/bWILvJ+jAP2gWRHGZU017SKGPRrPOHg==
+"@superfaceai/parser@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@superfaceai/parser/-/parser-1.1.0.tgz#5e268b3cbf7c1b20aced9cddbabe8dd837c3f4b6"
+  integrity sha512-onu8Omp1nv/U+nXuf5fFW3Jg31JCTNOTOecpPoGw6NzcVDociNezdpzvlrrznPI7nna1G95vdwx0FTt3YHWaqg==
   dependencies:
-    "@superfaceai/ast" "1.0.0"
+    "@superfaceai/ast" "^1.1.0"
     "@types/debug" "^4.1.5"
     debug "^4.3.1"
     typescript "^4"
@@ -75,6 +75,16 @@ accepts@~1.3.7:
   dependencies:
     mime-types "~2.1.34"
     negotiator "0.6.3"
+
+acorn-walk@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"
+  integrity sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==
+
+acorn@^8.7.0:
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.7.0.tgz#90951fde0f8f09df93549481e5fc141445b791cf"
+  integrity sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==
 
 ansi-align@^3.0.0:
   version "3.0.1"
@@ -342,7 +352,7 @@ cookie@0.4.1:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.1.tgz#afd713fe26ebd21ba95ceb61f9a8116e50a537d1"
   integrity sha512-ZwrFkGJxUR3EIoXtO+yVE69Eb7KlixbaeAWfBQB9vVsNn/o+Yw69gBWSSDK825hQNdN+wF8zELf3dFNl/kxkUA==
 
-cross-fetch@^3.0.5:
+cross-fetch@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
   integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
@@ -1430,10 +1440,13 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vm2@^3.9.2:
-  version "3.9.5"
-  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.5.tgz#5288044860b4bbace443101fcd3bddb2a0aa2496"
-  integrity sha512-LuCAHZN75H9tdrAiLFf030oW7nJV5xwNMuk1ymOZwopmuK3d2H4L1Kv4+GFHgarKiLfXXLFU+7LDABHnwOkWng==
+vm2@^3.9.7:
+  version "3.9.9"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.9.tgz#c0507bc5fbb99388fad837d228badaaeb499ddc5"
+  integrity sha512-xwTm7NLh/uOjARRBs8/95H0e8fT3Ukw5D/JJWhxMbhKzNh1Nu981jQKvkep9iKYNxzlVrdzD0mlBGkDKZWprlw==
+  dependencies:
+    acorn "^8.7.0"
+    acorn-walk "^8.2.0"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

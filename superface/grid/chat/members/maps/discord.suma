@@ -5,48 +5,46 @@ provider = "discord"
 GetMembers map
 """
 map GetMembers {
-    return map error if (input.server === undefined) {
-        title = "Input parameter `server` is required in case of discord provider"
+  return map error if (input.workspace === undefined) {
+    title = "Input parameter `workspace` is required for provider discord"
+  }
+
+  http GET "/guilds/{input.workspace}/members" {
+    request "application/json" {
+      query {
+        after = input.page
+        limit = input.limit
+      }
+
+      headers {
+        "Authorization" = `Bot ${parameters.accessToken}`
+      }
     }
 
-	http GET "/guilds/{input.server}/members" {
-		request "application/json" {
-			query {
-				after = input.page
-				limit = input.limit
-			}
+    response 200 "application/json" {
+      members = call MapMembers(members = body)
+      rateLimit = call MapRateLimitDetails(headers = headers)
 
-			headers {
-				"Authorization" = `Bot ${parameters.accessToken}`
-			}
-		}
+      result.members = members,
+      result.nextPage = members[members.length - 1].id
 
-		response 200 "application/json" {
-			members = call MapMembers(members = body)
-			rateLimit = call MapRateLimitDetails(headers = headers)
+      set if (rateLimit) {
+        result.rateLimit = rateLimit
+      }
 
-			result = {
-				members: members,
-				nextPage: members[members.length - 1].id
-			}
+      map result result
+    }
 
-			set if (rateLimit) {
-				result.rateLimit = rateLimit
-			}
-
-			map result result
-		}
-
-		response {
-			error = call MapDiscordError(
-				statusCode = statusCode,
-				error = body,
-				headers = headers,
-			)
-			
-			map error error
-		}
-	}
+    response {
+      error = call MapDiscordError(
+        statusCode = statusCode,
+        error = body,
+        headers = headers,
+      )
+      
+      map error error
+    }
+  }
 }
 
 """
@@ -54,35 +52,27 @@ Operation MapMembers
 Returns array mapping members in received body
 """
 operation MapMembers {
-	members = []
-	
-	members = call foreach(index of Array(args.members.length).fill().map((_, i) => i)) MapMember(
-		index = index,
-		members = args.members,
-	) if (args.members && args.members.length > 0)
+  members = args.members.map(member => {
+    const resultMember = {
+      id: member.user.id,
+      joinedAt: Date.parse(member.joined_at),
+      isBot: member.user.bot ? true : false,
+    }
 
-	return members
-}
+    // map user's platform wide nickname - username
+    if (member.user && member.user.username) {
+      resultMember.username = member.user.username
+    }
 
-operation MapMember {
-	index = args.index
-	member = args.members[index]
+    // if user's guild nickname is available - use it instead
+    if (member.nick) {
+      resultMember.username = member.nick
+    }
 
-	resultMember = {
-		id: member.user.id,
-		joinedAt: Date.parse(member.joined_at),
-		isBot: member.user.bot ? true : false,
-	}
+    return resultMember
+  });
 
-	set if (member.nick) {
-		resultMember.username = member.nick
-	}
-
-	set if (!resultMember.username) {
-		resultMember.username = member.user.username
-	}
-
-	return resultMember
+  return members
 }
 
 """
@@ -90,49 +80,49 @@ Operation MapRateLimitDetails
 Returns object mapping rate limit details specified in received headers
 """
 operation MapRateLimitDetails {
-	headers = args.headers
-	details = {}
+  headers = args.headers
+  details = {}
 
-	bucket = headers['x-ratelimit-bucket']
-	totalRequests = parseInt(headers['x-ratelimit-limit'])
-	remainingRequests = parseInt(headers['x-ratelimit-remaining'])
-	resetTimestamp = parseFloat(headers['x-ratelimit-reset'])
-	resetAfter = parseInt(headers['x-ratelimit-reset-after'])
-	retryAfter = parseInt(headers['Retry-After'])
+  bucket = headers['x-ratelimit-bucket']
+  totalRequests = parseInt(headers['x-ratelimit-limit'])
+  remainingRequests = parseInt(headers['x-ratelimit-remaining'])
+  resetTimestamp = parseFloat(headers['x-ratelimit-reset'])
+  resetAfter = parseInt(headers['x-ratelimit-reset-after'])
+  retryAfter = parseInt(headers['Retry-After'])
 
-	set if (bucket) {
-		details.bucket = bucket
-	}
+  set if (bucket) {
+    details.bucket = bucket
+  }
 
-	set if (!isNaN(totalRequests)) {
-		details.totalRequests = totalRequests
-	}
+  set if (!isNaN(totalRequests)) {
+    details.totalRequests = totalRequests
+  }
 
-	set if (!isNaN(remainingRequests)) {
-		details.remainingRequests = remainingRequests
-	}
+  set if (!isNaN(remainingRequests)) {
+    details.remainingRequests = remainingRequests
+  }
 
-	set if (!isNaN(resetAfter)) {
-		details.resetAfter = resetAfter
-	}
+  set if (!isNaN(resetAfter)) {
+    details.resetAfter = resetAfter
+  }
 
-	set if (!isNaN(resetTimestamp)) {
-		details.resetTimestamp = resetTimestamp
-	}
+  set if (!isNaN(resetTimestamp)) {
+    details.resetTimestamp = resetTimestamp
+  }
 
-	set if (!isNaN(retryAfter)) {
-		details.retryAfter = retryAfter
-	}
+  set if (!isNaN(retryAfter)) {
+    details.retryAfter = retryAfter
+  }
 
-	set if (details.remainingRequests && details.totalRequests) {
-		details.remainingRequestsPercentage = (details.remainingRequests / details.totalRequests) * 100
-	}
+  set if (details.remainingRequests && details.totalRequests) {
+    details.remainingRequestsPercentage = (details.remainingRequests / details.totalRequests) * 100
+  }
 
-	set if (Object.keys(details).length === 0) {
-		details = undefined
-	}
+  set if (Object.keys(details).length === 0) {
+    details = undefined
+  }
 
-	return details
+  return details
 }
 
 """
@@ -140,58 +130,58 @@ Operation Map Discord Error
 Returns error object based on error body, statusCode and headers.
 """
 operation MapDiscordError {
-	statusCode = args.statusCode
-	discordError = args.error
-	headers = args.headers
+  statusCode = args.statusCode
+  discordError = args.error
+  headers = args.headers
 
-	rateLimit = call MapRateLimitDetails(headers = headers)
-	detail = discordError.message
+  rateLimit = call MapRateLimitDetails(headers = headers)
+  detail = discordError.message
 
-	return if (statusCode === 400) {
-		title = 'Bad request'
-		detail = discordError
-		rateLimit = rateLimit
-	}
+  return if (statusCode === 400) {
+    title = 'Bad request'
+    detail = discordError
+    rateLimit = rateLimit
+  }
 
-	return if (statusCode === 401) {
-		title = 'Unauthorized'
-		detail = detail
-		rateLimit = rateLimit
-	}
+  return if (statusCode === 401) {
+    title = 'Unauthorized'
+    detail = detail
+    rateLimit = rateLimit
+  }
 
-	return if (statusCode === 403) {
-		title = 'Forbidden'
-		detail = detail
-		rateLimit = rateLimit
-	}
+  return if (statusCode === 403) {
+    title = 'Forbidden'
+    detail = detail
+    rateLimit = rateLimit
+  }
 
-	return if (statusCode === 404) {
-		title = 'Not found'
-		detail = detail
-		rateLimit = rateLimit
-	}
+  return if (statusCode === 404) {
+    title = 'Not found'
+    detail = detail
+    rateLimit = rateLimit
+  }
 
-	return if (statusCode === 405) {
-		title = 'Method not allowed'
-		detail = detail
-		rateLimit = rateLimit
-	}
+  return if (statusCode === 405) {
+    title = 'Method not allowed'
+    detail = detail
+    rateLimit = rateLimit
+  }
 
-	return if (statusCode === 429) {
-		title = 'Too Many Requests'
-		detail = `${detail} Retry after ${discordError.retry_after} seconds`
-		rateLimit = rateLimit
-	}
+  return if (statusCode === 429) {
+    title = 'Too Many Requests'
+    detail = `${detail} Retry after ${discordError.retry_after} seconds`
+    rateLimit = rateLimit
+  }
 
-	return if (statusCode === 502) {
-		title = 'Bad gateway'
-		detail = detail
-		rateLimit = rateLimit
-	}
+  return if (statusCode === 502) {
+    title = 'Bad gateway'
+    detail = detail
+    rateLimit = rateLimit
+  }
 
-	return {
-		title = 'Unknown error'
-		detail = `Unknown error occurred. Status: ${statusCode}. Message: ${detail}.`
-		rateLimit = rateLimit
-	}
+  return {
+    title = 'Unknown error'
+    detail = `Unknown error occurred. Status: ${statusCode}. Message: ${detail}.`
+    rateLimit = rateLimit
+  }
 }

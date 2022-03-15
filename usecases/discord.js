@@ -4,7 +4,7 @@ const {
   getChannels,
   getMembers,
   getMessages,
-  getServers,
+  getWorkspaces,
   getThreads,
   sendMessage,
 } = require('./sf/usecases');
@@ -12,11 +12,11 @@ const {
 async function discord(destination) {
   const provider = 'discord';
 
-  const servers = await getServers(provider, { asBot: true });
-  // console.log(inspect(servers, true, 15));
+  const workspaces = await getWorkspaces(provider, { asBot: true });
+  // console.log(inspect(Workspaces, true, 15));
 
-  const serverId = servers.servers[0].id;
-  const channels = await getChannels(provider, { server: serverId });
+  const workspaceId = workspaces.workspaces[0].id;
+  const channels = await getChannels(provider, { workspace: workspaceId });
   // console.log(inspect(channels, true, 15));
 
   const channelId = channels.channels[0].id;
@@ -55,7 +55,7 @@ async function discord(destination) {
   // GetMembers - also supports pagination, in same manner as described above
 
   const members = await getMembers(provider, {
-    server: serverId,
+    workspace: workspaceId,
     limit: 2,
   });
 
@@ -65,7 +65,7 @@ async function discord(destination) {
   // this usecase does not support pagination as well as in
   // discord map for getting channels, they return them all in one request
   const threads = await getThreads(provider, {
-    server: serverId,
+    workspace: workspaceId,
     limit: 2,
   });
 

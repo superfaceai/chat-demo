@@ -1,76 +1,99 @@
 const client = require('./client');
 
+async function perform(useCase, input, provider) {
+  try {
+    return (await useCase.perform(input, { provider })).unwrap();
+  } catch (error) {
+    throw new Error(
+      `Perform failed: ${provider.configuration.name} - ${useCase.name}\n\nINPUT:\n${JSON.stringify(
+        input
+      )}\n\nOriginal Error: ${error.toString()}`
+    );
+  }
+}
+
+async function getConfiguration(profileName, providerName, useCaseName) {
+  try {
+    const profile = await client.getProfile(profileName);
+    const provider = await client.getProvider(providerName);
+    const useCase = profile.getUseCase(useCaseName);
+
+    return {
+      provider,
+      useCase,
+    };
+  } catch (error) {
+    throw new Error(
+      `Getting SF components failed: ${profileName}/${providerName}/${useCaseName}\n\nOriginal Error: ${error.message}`
+    );
+  }
+}
+
 async function getChannels(providerName, input) {
-  const profile = await client.getProfile('chat/channels');
-  const provider = await client.getProvider(providerName);
+  const { useCase, provider } = await getConfiguration(
+    'chat/channels',
+    providerName,
+    'GetChannels'
+  );
 
-  const result = await profile
-    .getUseCase('GetChannels')
-    .perform(input, { provider });
-
-  return result.unwrap();
+  return await perform(useCase, input, provider);
 }
 
 async function getMembers(providerName, input) {
-  const profile = await client.getProfile('chat/members');
-  const provider = await client.getProvider(providerName);
+  const { useCase, provider } = await getConfiguration(
+    'chat/members',
+    providerName,
+    'GetMembers'
+  );
 
-  const result = await profile
-    .getUseCase('GetMembers')
-    .perform(input, { provider });
-
-  return result.unwrap();
+  return await perform(useCase, input, provider);
 }
 
 async function getMessages(providerName, input) {
-  const profile = await client.getProfile('chat/messages');
-  const provider = await client.getProvider(providerName);
+  const { useCase, provider } = await getConfiguration(
+    'chat/messages',
+    providerName,
+    'GetMessages'
+  );
 
-  const result = await profile
-    .getUseCase('GetMessages')
-    .perform(input, { provider });
-
-  return result.unwrap();
+  return await perform(useCase, input, provider);
 }
 
-async function getServers(providerName, input) {
-  const profile = await client.getProfile('chat/servers');
-  const provider = await client.getProvider(providerName);
+async function getWorkspaces(providerName, input) {
+  const { useCase, provider } = await getConfiguration(
+    'chat/workspaces',
+    providerName,
+    'GetWorkspaces'
+  );
 
-  const result = await profile
-    .getUseCase('GetServers')
-    .perform(input, { provider });
-
-  return result.unwrap();
+  return await perform(useCase, input, provider);
 }
 
 async function getThreads(providerName, input) {
-  const profile = await client.getProfile('chat/threads');
-  const provider = await client.getProvider(providerName);
+  const { useCase, provider } = await getConfiguration(
+    'chat/threads',
+    providerName,
+    'GetThreads'
+  );
 
-  const result = await profile
-    .getUseCase('GetThreads')
-    .perform(input, { provider });
-
-  return result.unwrap();
+  return await perform(useCase, input, provider);
 }
 
 async function sendMessage(providerName, input) {
-  const profile = await client.getProfile('chat/send-message');
-  const provider = await client.getProvider(providerName);
+  const { useCase, provider } = await getConfiguration(
+    'chat/send-message',
+    providerName,
+    'SendMessage'
+  );
 
-  const result = await profile
-    .getUseCase('SendMessage')
-    .perform(input, { provider });
-
-  return result.unwrap();
+  return await perform(useCase, input, provider);
 }
 
 module.exports = {
   getChannels,
   getMembers,
   getMessages,
-  getServers,
+  getWorkspaces,
   getThreads,
   sendMessage,
 };

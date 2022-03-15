@@ -1,52 +1,80 @@
-name = "chat/members"
+name = "chat/channels"
 version = "1.0.0"
 
 """
-Get workspace members
-Retrieve paginated list of members
+Get Channels
+Retrieve paginated list of channels, e.g. text channels in slack or discord
 """
-usecase GetMembers {
+usecase GetChannels {
   input {
     """
     Workspace
-    Representation of a workspace. Can be ID or name, depending on the provider capability.
+    Representation of a workspace. Can be guild or workspace, depending on the provider capability.
     """
-    workspace string!
-    
+    workspace string
+
+    """
+    Channel Visibility Filter
+    Limit the listing to either public or private channels; all channels are listed by default.
+    """
+    visibility enum {
+      private
+      public
+    }
+
     """
     Limit
-    Maximum number of records to retrieve
+    Maximum number of channels to retrieve
     """
     limit number
-    
+
     """
     Page
     Identification of page with paginated results (cursor)
     """
-    page string!
+    page string
   }
 
-  result Members
+  result {
+    """
+    Channels
+    List of retrieved channels
+    """
+    channels! [Channel]
+
+    """
+    Next Page
+    Cursor to the next page of listing
+    """
+    nextPage string
+
+    """
+    Rate Limit
+    Rate limit details
+    """
+    rateLimit RateLimit
+  }
+
   error Error
 
   example Successful {
     input {
-      workspace = '877903817948147752',
+      visibility = 'public',
       limit = 2
     }
 
     result {
-      members = [
+      channels = [
         {
           id = '1'
-          username = 'user1'
-          joinedAt = 1643798532134.069,
+          createdAt = 1546167104
+          name = 'random'
+          membersCount = 100
         }
         {
           id = '2'
-          username = 'userBot'
-          joinedAt = 1643808532134.069,
-          isBot = true
+          createdAt = 1546167104
+          membersCount = 100
         }
       ]
     }
@@ -54,7 +82,7 @@ usecase GetMembers {
 
   example Failed {
     input {
-      workspace = 'not-existing',
+      workspace = 'not-existing-workspace'
     }
 
     error {
@@ -63,51 +91,37 @@ usecase GetMembers {
   }
 }
 
-model Member {
+model Channel {
   """
   Id
-  Unique identifier of the member
+  Unique identifier of the channel
   """
   id! string!
 
   """
-  Username
-  Username identifier of the member
+  Created At
+  UNIX timestamp (e.g. 1095379198.75) when the channel was created
   """
-  username! string!
+  createdAt! number!
 
   """
-  Joined at
-  UNIX timestamp (e.g. 1095379198.75) when the member joined workspace
+  Name
+  Name of the retrieved channel
   """
-  joinedAt number
+  name string
 
   """
-  Is Bot
-  Boolean that represents whether the member is a bot
+  Description
+  Description of the channel. Can describe purpose or use of the channel.
   """
-  isBot boolean
-}
-
-model Members {
-  """
-  Members
-  List of retrieved members
-  """
-  members! [Member]!
+  description string
 
   """
-  Next Page
-  Cursor to the next page of listing
+  Members Count
+  Number of members of the retrieved channel
   """
-  nextPage string
-
-  """
-  Rate Limit
-  Rate limit details.
-  """
-  rateLimit RateLimit
-}
+  membersCount number
+}   
 
 model Error {
   """
@@ -124,7 +138,7 @@ model Error {
 
   """
   Rate Limit
-  Rate limit details.
+  Rate limit details
   """
   rateLimit RateLimit
 }

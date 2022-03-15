@@ -1,26 +1,23 @@
-profile = "chat/send-message@1.0"
+profile = "chat/workspaces@1.0"
 provider = "discord"
 
 """
-SendMessage map
+GetWorkspaces map
 """
-map SendMessage {
-  http POST "/channels/{input.destination}/messages" {
+map GetWorkspaces {
+  http GET "/users/@me/guilds" {
     request "application/json" {
       headers {
-        "Authorization" = `Bot ${parameters.accessToken}`
-      }
-      body {
-        content = input.text
+        "Authorization" = `${input.asBot ? 'Bot' : 'Bearer'} ${parameters.accessToken}`
       }
     }
 
     response 200 "application/json" {
+      workspaces = call MapWorkspaces(workspaces = body)
       rateLimit = call MapRateLimitDetails(headers = headers)
 
       map result {
-        messageId = body.id,
-        destination = body.channel_id
+        workspaces = workspaces
         rateLimit = rateLimit
       }
     }
@@ -36,6 +33,40 @@ map SendMessage {
     }
   }
 }
+
+operation MapWorkspaces {
+  workspaces = args.workspaces.map(workspace => {
+    /**
+     * Returns UNIX timestamp from specified discord snowflake id
+     * More about snowflakes: https://discord.com/developers/docs/reference#snowflakes
+     */
+    const discordEpoch = 1420070400000;
+    const getTimestamp = (snowflake) => Number(BigInt(snowflake) >> BigInt(22)) + discordEpoch;
+
+    const resultWorkspace = {
+      id: workspace.id,
+      createdAt: getTimestamp(workspace.id),
+      name: workspace.name,
+    };
+
+    if (workspace.member_count) {
+      resultWorkspace.membersCount = workspace.member_count;
+    }
+
+    if (workspace.icon) {
+      resultWorkspace.icon = workspace.icon;
+    }
+
+    if (workspace.description) {
+      resultWorkspace.description = workspace.description;
+    }
+
+    return resultWorkspace;
+  });
+
+  return workspaces
+}
+
 
 """
 Operation MapRateLimitDetails

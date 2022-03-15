@@ -10,7 +10,7 @@ async function slack() {
   const provider = 'slack';
 
   const channels = await getChannels(provider, {
-    types: ['public'],
+    visibility: 'public',
   });
   // console.log(inspect(channels, true, 15));
 

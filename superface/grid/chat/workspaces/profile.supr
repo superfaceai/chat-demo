@@ -1,25 +1,24 @@
-name = "chat/threads"
+name = "chat/workspaces"
 version = "1.0.0"
 
 """
-Get Threads
-Retrieve paginated list of threads
+GetWorkspaces usecase
 """
-usecase GetThreads {
-  input  {
+usecase GetWorkspaces {
+  input {
     """
-    Workspace
-    Representation of a workspace. Can be guild or workspace, depending on the provider capability.
+    As Bot
+    Boolean representing whether to authorize as bot
     """
-    workspace! string!
+    asBot boolean
   }
 
   result {
     """
-    Threads
-    List of retrieved threads
+    Workspaces
+    List of workspaces. Can be workspaces or guilds, depending on the provider capability.
     """
-    threads! [Thread]
+    workspaces! [Workspace]!
 
     """
     Rate Limit
@@ -29,75 +28,44 @@ usecase GetThreads {
   }
 
   error Error
-
-  example Successful {
-    input {
-      workspace = 'workspace_id'
-    }
-
-    result {
-      threads = [
-        {
-          id = '1'
-          createdAt = 1546167104
-          channel = 'random'
-        },
-        {
-          id = '2'
-          createdAt = 1546167105
-          channel = 'random'
-        }
-      ]
-    }
-  }
-
-  example Failed {
-    input {
-      workspace = 'not-existing-workspace'
-    }
-
-    error {
-      title = 'workspace_not_found'
-    }
-  }
 }
 
-model Thread {
+model Workspace {
   """
   Id
-  Unique identifier of the thread
+  Unique identifier of the workspace
   """
   id! string!
 
   """
   Created At
-  UNIX timestamp (e.g. 1095379198.75) when the thread was created
+  UNIX timestamp (e.g. 1095379198.75) when the workspace was created
   """
   createdAt! number!
 
   """
-  Channel
-  Unique identifier of the channel where the thread is located
-  """
-  channel! string!
-
-  """
-  Archive At
-  UNIX timestamp (e.g. 1095379198.75) when will be the thread archived
-  """
-  archiveAt number!
-
-  """
   Name
-  Name of retrieved thread
+  Name of the retrieved workspace
   """
   name string
 
   """
   Members Count
-  Number of members of the retrieved thread
+  Number of members of the retrieved workspace
   """
   membersCount number
+
+  """
+  Icon
+  Icon of the retrieved workspace
+  """
+  icon string
+
+  """
+  Description
+  Description of the workspace
+  """
+  description string
 }   
 
 model Error {
@@ -148,7 +116,7 @@ model RateLimit {
 
   """
   Reset Timestamp
-  Timestamp when the rate limits will reset (in Unix Timestamp format).
+  Timestamp when the rate limits will reset (in  Unix Timestamp format).
   """
   resetTimestamp number
 

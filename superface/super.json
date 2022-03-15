@@ -1,25 +1,17 @@
 {
     "profiles": {
       "chat/channels": {
-        "file": "./grid/chat/channels/profile.supr",
+        "version": "1.0.0",
         "providers": {
-          "slack": {
-            "file": "./grid/chat/channels/maps/slack.suma"
-          },
-          "discord": {
-            "file": "./grid/chat/channels/maps/discord.suma"
-          }
+          "slack": {},
+          "discord": {}
         }
       },
       "chat/messages": {
-        "file": "./grid/chat/messages/profile.supr",
+        "version": "1.0.0",
         "providers": {
-          "slack": {
-            "file": "./grid/chat/messages/maps/slack.suma"
-          },
-          "discord": {
-            "file": "./grid/chat/messages/maps/discord.suma"
-          }
+          "slack": {},
+          "discord": {}
         }
       },
       "chat/threads": {
@@ -52,24 +44,22 @@
           }
         }
       },
-      "chat/servers": {
-        "file": "./grid/chat/servers/profile.supr",
+      "chat/workspaces": {
+        "file": "./grid/chat/workspaces/profile.supr",
         "providers": {
           "discord": {
-            "file": "./grid/chat/servers/maps/discord.suma"
+            "file": "./grid/chat/workspaces/maps/discord.suma"
           }
         }
       }
     },
     "providers": {
       "slack": {
-        "file": "./providers/slack.json",
         "parameters": {
           "accessToken": "$SLACK_ACCESS_TOKEN"
         }
       },
       "discord": {
-        "file": "./providers/discord.json",
         "parameters": {
           "accessToken": "$DISCORD_ACCESS_TOKEN"
         }
