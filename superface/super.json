@@ -10,8 +10,12 @@
       "chat/messages": {
         "version": "1.0.0",
         "providers": {
-          "slack": {},
-          "discord": {}
+          "slack": {
+            "file": "./grid/chat/messages/slack.suma"
+          },
+          "discord": {
+            "file": "./grid/chat/messages/discord.suma"
+          }
         }
       },
       "chat/threads": {
